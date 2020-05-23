@@ -28,4 +28,4 @@ jobs:
 #     - run: npm run build --if-present
 #     - run: npm test
     - run: npm install -g @stoplight/spectral
-    - run: spectral lint *.yaml
+    - run: spectral lint -F warn *.yaml

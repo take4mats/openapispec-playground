@@ -32,4 +32,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: html
-        path: html/redoc-static.html
+        path: redoc-static.html

@@ -28,3 +28,8 @@ jobs:
     - run: spectral lint -F warn *.yaml
     - run: npm install -g redoc-cli
     - run: redoc-cli bundle petstore.yaml
+    - name: upload static html file
+      uses: actions/upload-artifact@v1
+      with:
+        name: html
+        path: html/redoc-static.html

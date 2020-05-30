@@ -27,9 +27,20 @@ jobs:
     - run: npm install -g @stoplight/spectral
     - run: spectral lint -F warn *.yaml
     - run: npm install -g redoc-cli
-    - run: redoc-cli bundle petstore.yaml
-    - name: upload static html file
-      uses: actions/upload-artifact@v1
+    - run: redoc-cli bundle -o public/index.html petstore.yaml
+
+    #- name: upload static html file
+      #uses: actions/upload-artifact@v1
+      #with:
+      #name: html
+      #path: redoc-static.html
+
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        name: html
-        path: redoc-static.html
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: ./public
+
+
+

@@ -31,10 +31,17 @@ jobs:
           npm install -g @stoplight/spectral
           spectral lint -F warn *.yaml
 
-      - name: create static API doc
+      - name: Create static API doc
         run: |
           npm install -g redoc-cli
-          redoc-cli bundle -o public/index.html petstore.yaml
+          for i in `ls public`; do redoc-cli bundle -o `echo dist/${i}.html | sed 's/yaml.//'` public/$i; done
+
+      - name: Create dist/index.html
+        run: |
+          cat app/head.txt > dist/index.html
+          for i in `ls dist | grep -v index.html`; do echo \<li\>\<a href="${i}"\>${i}\</a\>\</li\>; done >> dist/index.html
+          cat app/tail.txt >> dist/index.html
+          cat dist/index.html
 
       # - name: upload-artifact
         # uses: actions/upload-artifact@v1
@@ -42,10 +49,22 @@ jobs:
         # name: html
         # path: redoc-static.html
 
-      - name: deploy to gh-pages
+      - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: public
+          FOLDER: dist
+
+      - name: Deploy to netlify
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        with:
+          args: deploy --dir=./dist --prod
+          secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID"]'
+
+
+
 

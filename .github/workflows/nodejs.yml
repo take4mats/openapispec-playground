@@ -16,15 +16,15 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        'node-version': [12.x]
         # node-version: [10.x, 12.x]
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix['node-version'] }}
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ matrix['node-version'] }}
 
       - name: lint
         run: |
@@ -43,11 +43,11 @@ jobs:
           cat app/tail.txt >> dist/index.html
           cat dist/index.html
 
-      # - name: upload-artifact
-        # uses: actions/upload-artifact@v1
-        # with:
-        # name: html
-        # path: redoc-static.html
+      - name: upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: redoc_specs_dist
+          path: dist
 
       - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@releases/v3
